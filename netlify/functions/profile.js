@@ -19,17 +19,23 @@ async function getDatabase() {
 }
 
 function response(statusCode, body) {
-  return {
-    statusCode,
-    headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
-    body: JSON.stringify(body),
-  }
+  return new Response(JSON.stringify(body), {
+    status: statusCode,
+    headers: {
+      'content-type': 'application/json',
+      'cache-control': 'no-store',
+    },
+  })
 }
 
-export default async function handler(event) {
-  if (event.httpMethod !== 'GET') return response(405, { error: 'Method not allowed.' })
+export default async function handler(request) {
+  // Netlify's current runtime passes a Request, while the fallback fields
+  // keep this usable if the function is invoked with the older event shape.
+  const method = request.method || request.httpMethod
+  if (method !== 'GET') return response(405, { error: 'Method not allowed.' })
 
-  const url = event.queryStringParameters?.url
+  const queryUrl = request.url ? new URL(request.url).searchParams.get('url') : null
+  const url = queryUrl || request.queryStringParameters?.url
   if (!url) return response(400, { error: 'Missing "url" query parameter.' })
 
   const match = url.match(/instagram\.com\/([A-Za-z0-9_.]+)/)
