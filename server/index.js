@@ -7,7 +7,7 @@ import { scrapeInstagramProfile } from './scraper.js'
 const app = express()
 const PORT = process.env.PORT || 3001
 
-const MONGODB_URI = "mongodb+srv://kushangtanawala_db_user:EnjdAi0U7XTsxtOO@cluster.mongodb.net/?retryWrites=true&w=majority"
+const MONGODB_URI = process.env.MONGODB_URI
 const DB_NAME = 'insta_fetcher'
 const COLLECTION = 'profiles'
 
