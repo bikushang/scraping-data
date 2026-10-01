@@ -8,7 +8,7 @@ let db
 async function getDatabase() {
   if (db || !process.env.MONGODB_URI) return db
   try {
-    const client = new MongoClient("mongodb+srv://kushangtanawala_db_user:EnjdAi0U7XTsxtOO@cluster.mongodb.net/?retryWrites=true&w=majority")
+    const client = new MongoClient(process.env.MONGODB_URI)
     await client.connect()
     db = client.db(DB_NAME)
     console.log('Connected to MongoDB')
